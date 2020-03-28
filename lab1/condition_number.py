@@ -1,7 +1,7 @@
 import numpy as np
-import lab1.gradient_descent as gd
 import matplotlib.pyplot as plt
 from math import sqrt
+from lab1.gradient_descent import gradient_descent
 
 def create_matrix(k, n):
     r = sqrt(k)
@@ -14,7 +14,7 @@ def create_matrix(k, n):
     assert np.isclose(np.linalg.cond(new_A), k)
     return new_A
 
-def number_of_iters(cond, n_vars, n_checks=10):
+def number_of_iters(cond, n_vars, step_chooser, n_checks=100):
     avg_iters = 0
     for _ in range(n_checks):
         A = create_matrix(cond, n_vars)
@@ -22,7 +22,7 @@ def number_of_iters(cond, n_vars, n_checks=10):
         init_x = np.random.randn(len(A))
         f = lambda x: x.dot(A).dot(x) - b.dot(x)
         f_grad = lambda x: (A + A.T).dot(x) - b
-        trace = gradient_descent(f, f_grad, init_x, constant_step_chooser(1e-3), 'value')
+        trace = gradient_descent(f, f_grad, init_x, step_chooser, 'value')
         avg_iters += len(trace)
     return avg_iters / n_checks
 
